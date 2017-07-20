@@ -67,18 +67,51 @@ Theta2_grad = zeros(size(Theta2));
 
 
 %part 1: Feedforward
-h1 = sigmoid([ones(m, 1) X] * Theta1');
-h2 = sigmoid([ones(m, 1) h1] * Theta2');
-%cost function
+
+
+z2 = [ones(m, 1) X] * Theta1';
+a2 = sigmoid(z2);
+z3 = [ones(m, 1) a2] * Theta2';
+a3 = sigmoid(z3);
+
+
 for i = 1:m
-  %recide y
+  %set y
   yi = zeros(num_labels, 1);
   yi(y(i)) = 1;
-  J += (log(h2(i,:)) * (- yi)) - (log(1 - h2(i,:)) * (1 - yi));
+
+
+
+  %Backpropagation
+
+  %step 1, compute activations
+  a_1 = [1, X(i,:)]';
+  z_2 = Theta1 * a_1;
+  a_2 = [1; sigmoid(z_2)];
+  z_3 = Theta2 * a_2;
+  a_3 = sigmoid(z_3);
+
+  %step 2
+  delta_3 = a_3 - yi;
+  delta_2 = (Theta2' * delta_3) .* [1; sigmoidGradient(z_2)];
+  delta_2 = delta_2(2:end);
+  Theta2_grad = Theta2_grad + (delta_3 * a_2');
+  Theta1_grad = Theta1_grad + (delta_2 * a_1');
+
+
+
+  %cost function
+  J += (log(a_3') * (- yi)) - (log(1 - a_3') * (1 - yi));
+
 
 end
 
+
 J *= 1/m;
+
+%adding regulation term
+J += lambda/(2*m) * (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)));
+
 
 
 
@@ -95,9 +128,16 @@ J *= 1/m;
 % -------------------------------------------------------------
 
 % =========================================================================
+Theta1_grad *= 1/m;
+Theta1_grad(:,2:end) += lambda/m .* Theta1(:,2:end);
+Theta2_grad *= 1/m;
+Theta2_grad(:,2:end) += lambda/m .* Theta2(:,2:end);
+
+
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
+
 
 
 end
