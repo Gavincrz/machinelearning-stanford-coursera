@@ -218,3 +218,17 @@ end
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
+
+lambda = 3;
+[theta] = trainLinearReg(X_poly, y, lambda);
+error_test = linearRegCostFunction(X_poly_test, ytest, theta, 0)
+
+% Plot training data and fit
+figure(1);
+plot(X, y, 'rx', 'MarkerSize', 10, 'LineWidth', 1.5);
+plotFit(min(X), max(X), mu, sigma, theta, p);
+xlabel('Change in water level (x)');
+ylabel('Water flowing out of the dam (y)');
+title (sprintf('Polynomial Regression Fit (lambda = %f)', lambda));
+
+pause;
