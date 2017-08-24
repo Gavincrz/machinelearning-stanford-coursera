@@ -10,3 +10,4 @@ Complete programming assignments for Stanford Coursera course.
 * Assignment 4 - Neural Network Learning
 * Assignment 5 - Regularized Linear Regression and Bias/Variance
 * Assignment 6 - Support Vector Machines
+* Assignment 7 - K-Means Clustering and PCA
